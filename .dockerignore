@@ -1,2 +1,4 @@
 scripts/
 docker-compose.yml
+grafana.json
+.pre-commit-config.yml
