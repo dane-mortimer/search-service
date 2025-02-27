@@ -1,5 +1,43 @@
 #!/usr/bin/env bash
 
+
+sleep 2
+
+curl -X PUT "http://localhost:9200/my-index" -H "Content-Type: application/json" -d '
+{
+  "mappings": {
+    "properties": {
+      "title": {
+        "type": "text",
+        "analyzer": "autocomplete"
+      }
+    }
+  },
+  "settings": {
+    "analysis": {
+      "filter": {
+        "edge_ngram_filter": {
+          "type": "edge_ngram",
+          "min_gram": 1,
+          "max_gram": 20
+        }
+      },
+      "analyzer": {
+        "autocomplete": {
+          "type": "custom",
+          "tokenizer": "standard",
+          "filter": [
+            "lowercase",
+            "edge_ngram_filter"
+          ]
+        }
+      }
+    }
+  }
+}'
+
+sleep 2 
+
 docs=(
   "Introduction to OpenSearch|OpenSearch is a powerful search engine based on Elasticsearch."
   "Getting Started with Docker|Docker simplifies application deployment using containers."
@@ -51,7 +89,7 @@ do
   curl -X POST http://localhost:9200/my-index/_doc/$((i+1)) -H "Content-Type: application/json" -d "{
     \"title\": \"$title\",
     \"content\": \"$content\"
-  }"
+  }" >/dev/null
 done
 
 

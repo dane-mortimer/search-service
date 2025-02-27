@@ -14,22 +14,26 @@ import (
 )
 
 func Suggest(query string) ([]string, error) {
+
+	// Define the search request
 	req := opensearchapi.SearchRequest{
+		Index: []string{"my-index"}, // Replace with your index name
 		Body: strings.NewReader(fmt.Sprintf(`{
-					"suggest": {
-							"my-suggestion": {
-									"text": "%s",
-									"term": {
-											"field": "title"
-									}
-							}
+			"query": {
+				"match": {
+					"title": {
+						"query": "%s",
+						"analyzer": "standard"
 					}
-			}`, query)),
+				}
+			}
+		}`, query)),
 	}
 
+	// Execute the search request
 	res, err := req.Do(context.Background(), opensearch.Client)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error executing search request: %w", err)
 	}
 	defer res.Body.Close()
 
@@ -37,41 +41,48 @@ func Suggest(query string) ([]string, error) {
 	body, _ := io.ReadAll(res.Body)
 	log.Printf("OpenSearch Response: %s", string(body))
 
+	// Parse the response
 	var result map[string]interface{}
-	if err := json.NewDecoder(strings.NewReader(string(body))).Decode(&result); err != nil {
-		return nil, err
+	if err := json.Unmarshal(body, &result); err != nil {
+		return nil, fmt.Errorf("error parsing response: %w", err)
 	}
 
-	// Extract suggestions from the response
-	suggest, ok := result["suggest"].(map[string]interface{})
+	// Extract hits from the response
+	hits, ok := result["hits"].(map[string]interface{})
 	if !ok {
-		return nil, fmt.Errorf("invalid suggest response format")
+		return nil, fmt.Errorf("invalid hits format in response")
 	}
 
-	mySuggestion, ok := suggest["my-suggestion"].([]interface{})
-	if !ok || len(mySuggestion) == 0 {
-		return nil, fmt.Errorf("no suggestions found")
-	}
-
-	// Get the options from the first suggestion
-	options, ok := mySuggestion[0].(map[string]interface{})["options"].([]interface{})
+	// Extract the list of documents
+	docs, ok := hits["hits"].([]interface{})
 	if !ok {
-		return nil, fmt.Errorf("invalid options format")
+		return nil, fmt.Errorf("invalid hits.hits format in response")
 	}
 
-	// Extract the text from each option
-	var output []string
-	for _, option := range options {
-		opt, ok := option.(map[string]interface{})
+	// Extract the titles from the documents
+	var titles []string
+	for _, doc := range docs {
+		docMap, ok := doc.(map[string]interface{})
 		if !ok {
 			continue
 		}
-		text, ok := opt["text"].(string)
+
+		source, ok := docMap["_source"].(map[string]interface{})
 		if !ok {
 			continue
 		}
-		output = append(output, text)
+
+		title, ok := source["title"].(string)
+		if !ok {
+			continue
+		}
+
+		titles = append(titles, title)
 	}
 
-	return output, nil
+	if len(titles) == 0 {
+		return nil, fmt.Errorf("no titles found in the response")
+	}
+
+	return titles, nil
 }
