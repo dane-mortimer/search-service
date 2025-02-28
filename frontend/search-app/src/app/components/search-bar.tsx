@@ -23,7 +23,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
     }
   };
 
-  const handleInputChange = async (event: React.ChangeEvent<any>, value: string) => {
+  const handleInputChange = async (event: React.SyntheticEvent, value: string) => {
     setQuery(value);
     await fetchSuggestions(value);
   };
