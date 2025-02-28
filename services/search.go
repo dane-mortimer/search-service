@@ -7,13 +7,13 @@ import (
 	"strconv"
 	"strings"
 
+	"search-service/clients"
 	"search-service/models"
-	"search-service/opensearch"
 
 	"github.com/opensearch-project/opensearch-go/opensearchapi"
 )
 
-func Search(query, pageStr, sizeStr string) ([]models.Document, int, error) {
+func Search(query, pageStr, sizeStr string, fields []string) ([]models.Document, int, error) {
 	page, _ := strconv.Atoi(pageStr)
 	size, _ := strconv.Atoi(sizeStr)
 
@@ -26,20 +26,27 @@ func Search(query, pageStr, sizeStr string) ([]models.Document, int, error) {
 
 	from := (page - 1) * size
 
-	req := opensearchapi.SearchRequest{
-		Body: strings.NewReader(fmt.Sprintf(`{
-            "query": {
-                "multi_match": {
-                    "query": "%s",
-                    "fields": ["title", "content"]
-                }
-            },
-            "from": %d,
-            "size": %d
-        }`, query, from, size)),
+	// Construct the fields array for the multi_match query
+	fieldsJSON, err := json.Marshal(fields)
+	if err != nil {
+		return nil, 0, fmt.Errorf("failed to marshal fields: %w", err)
 	}
 
-	res, err := req.Do(context.Background(), opensearch.Client)
+	req := opensearchapi.SearchRequest{
+		Body: strings.NewReader(fmt.Sprintf(`{
+			"query": {
+				"multi_match": {
+					"query": "%s",
+					"type": "bool_prefix",
+					"fields": %s
+				}
+			},
+			"from": %d,
+			"size": %d
+		}`, query, string(fieldsJSON), from, size)),
+	}
+
+	res, err := req.Do(context.Background(), clients.Client)
 	if err != nil {
 		return nil, 0, err
 	}

@@ -8,7 +8,7 @@ import (
 	"log"
 	"strings"
 
-	"search-service/opensearch"
+	"search-service/clients"
 
 	"github.com/opensearch-project/opensearch-go/opensearchapi"
 )
@@ -19,19 +19,23 @@ func Suggest(query string) ([]string, error) {
 	req := opensearchapi.SearchRequest{
 		Index: []string{"my-index"}, // Replace with your index name
 		Body: strings.NewReader(fmt.Sprintf(`{
-			"query": {
-				"match": {
-					"title": {
-						"query": "%s",
-						"analyzer": "standard"
-					}
-				}
-			}
-		}`, query)),
+  "query": {
+    "multi_match": {
+      "query": "%s",
+      "type": "bool_prefix",
+      "fields": [
+        "title",
+        "title._2gram",
+        "title._3gram"
+      ]
+    }
+  },
+  "size": 3
+}`, query)),
 	}
 
 	// Execute the search request
-	res, err := req.Do(context.Background(), opensearch.Client)
+	res, err := req.Do(context.Background(), clients.Client)
 	if err != nil {
 		return nil, fmt.Errorf("error executing search request: %w", err)
 	}

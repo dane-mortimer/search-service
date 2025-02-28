@@ -16,12 +16,25 @@ services:
     build: .
     container_name: search-service
     environment:
-      - OPENSEARCH_URL=http://opensearch:9200
+      - OPENSEARCH_ENDPOINT=http://opensearch:9200
       - PORT=8080
+      - ENV=local
     ports:
       - "8080:8080"
     depends_on:
       - opensearch
+    networks:
+      - opensearch-net
+
+  react-app:
+    build:
+      context: ./react-search-app
+      dockerfile: Dockerfile
+    container_name: react-app
+    ports:
+      - "3001:80"
+    depends_on:
+      - search-service
     networks:
       - opensearch-net
 

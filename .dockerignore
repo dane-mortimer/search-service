@@ -2,3 +2,4 @@ scripts/
 docker-compose.yml
 grafana.json
 .pre-commit-config.yml
+react-search-app/

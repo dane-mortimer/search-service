@@ -13,8 +13,10 @@ func SearchHandler(w http.ResponseWriter, r *http.Request) {
 	pageStr := r.URL.Query().Get("page")
 	sizeStr := r.URL.Query().Get("size")
 
+	fields := []string{"title", "content", "description"}
+
 	// Perform the search
-	searchResult, totalItems, err := services.Search(query, pageStr, sizeStr)
+	searchResult, totalItems, err := services.Search(query, pageStr, sizeStr, fields)
 	if err != nil {
 		http.Error(w, "Error searching documents", http.StatusInternalServerError)
 		return

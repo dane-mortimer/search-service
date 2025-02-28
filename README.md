@@ -4,6 +4,29 @@ A simple search service built on OpenSearch with prometheus and grafana for obse
 
 The plan is to extend this service, add OpenSearch cluster on AWS as data store and ingest data from DynamoDB into OpenSearch via DynamoDB streams.
 
+# Architecture
+
+![Architecture](./assets/SearchServiceArchitecture.png)
+
+# Project Structure
+
+
+```
+├── clients               # External API clients (e.g. Opensearch)
+├── docker-compose.yml    # Docker Compose, deploy the app locally
+├── go.mod                # Depedency Management
+├── grafana.json          # Grafana configuration
+├── handlers              # API handlers
+├── main.go               # entry point for search service
+├── middleware            # Middleware - security, logging, cors etc
+├── models                # Application comdels
+├── prometheus.yml        # Prometheus configuration
+├── react-search-app      # Basic react app to use application
+├── scripts               # Upload services
+├── services              # API Services
+└── utils                 # Utility Files
+```
+
 # Usage 
 
 ## Requirements
@@ -20,11 +43,24 @@ docker-compose up -d --build
 
 ## Load mock data into service
 
+Once docker-compose has built and deployed, run this. 
+
+This script creates the search index and uploads about 10,000 lines of mock data. 
+
 ``` bash
 ./scripts/upload-opensearch-local.sh
 ``` 
 
 ## Build Grafana Dashboard
+
+Metrics included 
+
+```
+P99 Latency
+Total Requests
+Requests per interval
+Error rate
+```
 
 1. Navigate to `http:localhost:3000`
 2. Login using username: `admin`, password: `admin` 
@@ -34,7 +70,11 @@ docker-compose up -d --build
 
 ## Hit the service
 
-This script will run and hit the service 200 times, you can see the metrics being imported into grafana.
+Navigate to `localhost:3001` and use the service
+
+Or 
+
+This script will run and hit the service 2000 times, you can see the metrics being imported into grafana.
 
 ``` bash
 ./scripts/test-service.sh
