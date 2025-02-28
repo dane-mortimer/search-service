@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from 'react';
-import { Container, Typography, Pagination } from '@mui/material';
+import { Container, Pagination } from '@mui/material';
 import SearchBar from '../components/search-bar';
 import SearchTable from '../components/table';
 import { ApiResponse, SearchResult, Pagination as PaginationType } from '../types/types';
@@ -29,9 +29,6 @@ const SearchPage: React.FC = () => {
 
   return (
     <Container>
-      <Typography variant="h3" align="center" gutterBottom style={{ marginTop: '20px' }}>
-        Search App
-      </Typography>
       <SearchBar onSearch={handleSearch} />
       <SearchTable data={searchResults} />
       {pagination.total_pages > 1 && (

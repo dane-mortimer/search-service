@@ -14,17 +14,29 @@ RUN npm install
 # Copy the rest of the application code
 COPY . .
 
-# Build the React app
+# Build the Next.js app
 RUN npm run build
 
-# Use a lightweight Nginx image to serve the React app
-FROM nginx:alpine
+# Use a Node.js runtime to serve the Next.js app
+FROM node:20 AS production
 
-# Copy the build output from the previous stage
-COPY --from=build /app/build /usr/share/nginx/html
+# Set the working directory
+WORKDIR /app
 
-# Expose port 80
-EXPOSE 80
+# Copy package.json and package-lock.json
+COPY package*.json ./
 
-# Start Nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Install only production dependencies
+RUN npm install --production
+
+# Copy the build output and other necessary files from the build stage
+COPY --from=build /app/.next ./.next
+COPY --from=build /app/public ./public
+COPY --from=build /app/package.json ./package.json
+# COPY --from=build /app/next.config.js ./next.config.js - for custom next config later
+
+# Expose the port the app will run on
+EXPOSE 3000
+
+# Start the Next.js app
+CMD ["npm", "start"]

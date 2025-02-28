@@ -35,7 +35,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
   };
 
   return (
-    <div style={{ width: '100%', maxWidth: '600px', margin: '0 auto' }}>
+    <div style={{ width: '100%', maxWidth: '600px', margin: '20px auto' }}>
       <Autocomplete
         freeSolo
         options={suggestions}
