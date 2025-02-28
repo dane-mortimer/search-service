@@ -22,11 +22,10 @@ func Suggest(query string) ([]string, error) {
   "query": {
     "multi_match": {
       "query": "%s",
-      "type": "bool_prefix",
+      "type": "phrase_prefix",
+			"slop": 2,
       "fields": [
-        "title",
-        "title._2gram",
-        "title._3gram"
+        "title"
       ]
     }
   },

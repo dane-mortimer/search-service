@@ -1,7 +1,10 @@
 # Use the official Golang image as the builder stage
 FROM golang:1.24 AS builder
 
-RUN apt-get update
+# Install system dependencies (if needed)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
 
 # Set the working directory inside the container
 WORKDIR /app
@@ -27,7 +30,7 @@ RUN apk add --no-cache libc6-compat
 # Set the working directory inside the container
 WORKDIR /root
 
-# Copy the compiled binary and database file from the builder stage
+# Copy the compiled binary from the builder stage
 COPY --from=builder /app/main .
 
 # Expose the necessary port

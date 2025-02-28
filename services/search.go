@@ -37,8 +37,9 @@ func Search(query, pageStr, sizeStr string, fields []string) ([]models.Document,
 			"query": {
 				"multi_match": {
 					"query": "%s",
-					"type": "bool_prefix",
-					"fields": %s
+					"type": "phrase_prefix",
+					"fields": %s,
+					"slop": 2
 				}
 			},
 			"from": %d,

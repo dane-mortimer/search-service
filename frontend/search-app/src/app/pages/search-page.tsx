@@ -7,16 +7,25 @@ import SearchTable from '../components/table';
 import { ApiResponse, SearchResult, Pagination as PaginationType } from '../types/types';
 
 const SearchPage: React.FC = () => {
+  const defaultPagination = { page: 1, size: 10, total_pages: 1, total_items: 0 }
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
-  const [pagination, setPagination] = useState<PaginationType>({ page: 1, size: 10, total_pages: 1, total_items: 0 });
+  const [pagination, setPagination] = useState<PaginationType>(defaultPagination);
   const [query, setQuery] = useState<string>('');
 
   const handleSearch = async (query: string, page: number) => {
     try {
       const response = await fetch(`http://localhost:8080/search?q=${query}&page=${page}&size=${pagination.size}`);
       const result: ApiResponse = await response.json();
-      setSearchResults(result.data);
-      setPagination(result.pagination);
+
+      if (result.data) {
+        setSearchResults(result.data);
+        setPagination(result.pagination);
+      }
+      else {
+        setSearchResults([]);
+        setPagination(defaultPagination);
+      }
+
       setQuery(query);
     } catch (error) {
       console.error('Error fetching search results:', error);

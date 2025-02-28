@@ -60,9 +60,11 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
         )}
         onChange={(event, value) => {
           if (value) {
-            onSearch(value, 1); // Trigger search when a suggestion is selected
+            onSearch(value, 1);
           }
         }}
+        filterOptions={(options, state) => options} 
+        open={suggestions.length > 0} 
       />
     </div>
   );
