@@ -1,8 +1,10 @@
 # Search Service
 
-A simple search service built on OpenSearch with prometheus and grafana for observability. 
+A simple search and text-suggestion service built on OpenSearch with a NextJS frontend, prometheus and grafana for observability. 
 
 The plan is to extend this service, add OpenSearch cluster on AWS as data store and ingest data from DynamoDB into OpenSearch via DynamoDB streams.
+
+The compute will be deployed on ECS with the react application deployed on S3. 
 
 # Architecture
 
