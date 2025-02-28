@@ -33,9 +33,9 @@ The compute will be deployed on ECS with the react application deployed on S3.
 
 ## Requirements
 
-* Go installed
-* Docker installed
-* Docker compose installed
+* Go installed - v1.24
+* Docker installed - v20.10.10
+* Docker compose installed - v1.29.2
 
 ## Launch Service
 
