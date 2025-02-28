@@ -28,7 +28,7 @@ services:
 
   react-app:
     build:
-      context: ./react-search-app
+      context: ./frontend/search-app
       dockerfile: Dockerfile
     container_name: react-app
     ports:
