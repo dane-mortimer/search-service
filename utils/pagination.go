@@ -2,19 +2,12 @@ package utils
 
 import (
 	"math"
+	"search-service/models"
 	"strconv"
 )
 
-// Pagination represents pagination details
-type Pagination struct {
-	Page       int `json:"page"`
-	Size       int `json:"size"`
-	TotalPages int `json:"total_pages"`
-	TotalItems int `json:"total_items"`
-}
-
 // NewPagination creates a new Pagination instance
-func NewPagination(pageStr, sizeStr string, totalItems int) Pagination {
+func NewPagination(pageStr, sizeStr string, totalItems int) models.Pagination {
 	page, _ := strconv.Atoi(pageStr)
 	size, _ := strconv.Atoi(sizeStr)
 
@@ -27,7 +20,7 @@ func NewPagination(pageStr, sizeStr string, totalItems int) Pagination {
 
 	totalPages := int(math.Ceil(float64(totalItems) / float64(size)))
 
-	return Pagination{
+	return models.Pagination{
 		Page:       page,
 		Size:       size,
 		TotalPages: totalPages,

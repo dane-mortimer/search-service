@@ -1,0 +1,84 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:135.0) Gecko/20100101 Firefox/135.0" version="26.0.16">
+  <diagram name="Page-1" id="IShNvl09Ot0pIQLS3Oj8">
+    <mxGraphModel dx="1152" dy="1005" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="y_fi_fni9nRm2-cMVZvl-1" value="React Application" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-23" y="35" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="y_fi_fni9nRm2-cMVZvl-16" value="" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=12;startSize=8;endSize=8;" edge="1" parent="1" source="y_fi_fni9nRm2-cMVZvl-2" target="y_fi_fni9nRm2-cMVZvl-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="y_fi_fni9nRm2-cMVZvl-2" value="Search Service" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="169" y="35" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="y_fi_fni9nRm2-cMVZvl-9" value="" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=12;startSize=8;endSize=8;" edge="1" parent="1" source="y_fi_fni9nRm2-cMVZvl-3" target="y_fi_fni9nRm2-cMVZvl-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="y_fi_fni9nRm2-cMVZvl-11" value="&lt;div&gt;&lt;b&gt;Streams&lt;/b&gt;&lt;/div&gt;&lt;div&gt;Create&lt;/div&gt;&lt;div&gt;Update&lt;/div&gt;&lt;div&gt;Remove&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=12;" vertex="1" connectable="0" parent="y_fi_fni9nRm2-cMVZvl-9">
+          <mxGeometry x="-0.2254" y="2" relative="1" as="geometry">
+            <mxPoint x="6" y="2" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="y_fi_fni9nRm2-cMVZvl-12" value="" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=12;startSize=8;endSize=8;entryX=0.5;entryY=1;entryDx=0;entryDy=0;startArrow=classic;startFill=0;endArrow=none;" edge="1" parent="1" source="y_fi_fni9nRm2-cMVZvl-3" target="y_fi_fni9nRm2-cMVZvl-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="y_fi_fni9nRm2-cMVZvl-13" value="&lt;div&gt;Create Course&lt;/div&gt;&lt;div&gt;Get Course&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=12;" vertex="1" connectable="0" parent="y_fi_fni9nRm2-cMVZvl-12">
+          <mxGeometry x="-0.1217" y="-2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="y_fi_fni9nRm2-cMVZvl-3" value="DynamoDB" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" vertex="1" parent="1">
+          <mxGeometry x="-11.5" y="226" width="97" height="93" as="geometry" />
+        </mxCell>
+        <mxCell id="y_fi_fni9nRm2-cMVZvl-17" value="" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=12;startSize=8;endSize=8;" edge="1" parent="1" source="y_fi_fni9nRm2-cMVZvl-5" target="y_fi_fni9nRm2-cMVZvl-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="y_fi_fni9nRm2-cMVZvl-18" value="/metrics" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=12;" vertex="1" connectable="0" parent="y_fi_fni9nRm2-cMVZvl-17">
+          <mxGeometry x="0.0556" y="1" relative="1" as="geometry">
+            <mxPoint x="5" y="-1" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="y_fi_fni9nRm2-cMVZvl-5" value="Prometheus" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="361" y="35" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="y_fi_fni9nRm2-cMVZvl-19" value="" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=12;startSize=8;endSize=8;" edge="1" parent="1" source="y_fi_fni9nRm2-cMVZvl-6" target="y_fi_fni9nRm2-cMVZvl-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="y_fi_fni9nRm2-cMVZvl-6" value="Grafana" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="552" y="35" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="y_fi_fni9nRm2-cMVZvl-14" value="" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=12;startSize=8;endSize=8;entryX=0.5;entryY=1;entryDx=0;entryDy=0;startArrow=classic;startFill=0;endArrow=none;" edge="1" parent="1" source="y_fi_fni9nRm2-cMVZvl-7" target="y_fi_fni9nRm2-cMVZvl-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="y_fi_fni9nRm2-cMVZvl-15" value="&lt;div&gt;Search Courses&lt;/div&gt;&lt;div&gt;Suggest Courses&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=12;" vertex="1" connectable="0" parent="y_fi_fni9nRm2-cMVZvl-14">
+          <mxGeometry x="0.0846" y="-1" relative="1" as="geometry">
+            <mxPoint x="6" y="13" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="y_fi_fni9nRm2-cMVZvl-7" value="OpenSearch" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" vertex="1" parent="1">
+          <mxGeometry x="361" y="226" width="97" height="93" as="geometry" />
+        </mxCell>
+        <mxCell id="y_fi_fni9nRm2-cMVZvl-10" value="" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=12;startSize=8;endSize=8;" edge="1" parent="1" source="y_fi_fni9nRm2-cMVZvl-8" target="y_fi_fni9nRm2-cMVZvl-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="y_fi_fni9nRm2-cMVZvl-8" value="&lt;div&gt;Lambda&lt;/div&gt;&lt;div&gt;(OpenSearch&amp;nbsp;&lt;/div&gt;&lt;div&gt;Ingestor)&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="172" y="242.5" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="y_fi_fni9nRm2-cMVZvl-21" value="" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=12;startSize=8;endSize=8;" edge="1" parent="1" source="y_fi_fni9nRm2-cMVZvl-20" target="y_fi_fni9nRm2-cMVZvl-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="y_fi_fni9nRm2-cMVZvl-20" value="User" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="-150" y="35" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="y_fi_fni9nRm2-cMVZvl-23" value="" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=12;startSize=8;endSize=8;" edge="1" parent="1" source="y_fi_fni9nRm2-cMVZvl-22" target="y_fi_fni9nRm2-cMVZvl-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="y_fi_fni9nRm2-cMVZvl-22" value="Ops" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="756" y="35" width="30" height="60" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

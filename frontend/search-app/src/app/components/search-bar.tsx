@@ -63,7 +63,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
             onSearch(value, 1);
           }
         }}
-        filterOptions={(options, state) => options} 
+        filterOptions={(options) => options} 
         open={suggestions.length > 0} 
       />
     </div>

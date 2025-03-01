@@ -36,6 +36,9 @@ func main() {
 	r.HandleFunc("/suggest", handlers.SuggestHandler).Methods("GET")
 	r.Handle("/metrics", promhttp.Handler())
 
+	// Apply the NotFoundMiddleware
+	r.Use(middleware.NotFoundMiddleware)
+
 	// Start the server
 	port := os.Getenv("PORT")
 	if port == "" {

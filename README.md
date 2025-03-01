@@ -37,6 +37,20 @@ The compute will be deployed on ECS with the react application deployed on S3.
 * Docker installed - v20.10.10
 * Docker compose installed - v1.29.2
 
+``` bash
+pip install aws-local
+```
+
+## Build Lambda
+
+``` bash
+cd lambda
+python3 -m venv env
+source env/bin/activate
+mkdir package
+pip install -r requirements.txt --target package 
+```
+
 ## Launch Service
 
 ``` bash

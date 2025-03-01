@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"encoding/json"
 	"net/http"
 
 	"search-service/services"
@@ -18,19 +17,24 @@ func SearchHandler(w http.ResponseWriter, r *http.Request) {
 	// Perform the search
 	searchResult, totalItems, err := services.Search(query, pageStr, sizeStr, fields)
 	if err != nil {
-		http.Error(w, "Error searching documents", http.StatusInternalServerError)
+		utils.WriteErrorResponse(w, http.StatusInternalServerError, "Error searching documents", nil)
 		return
 	}
 
 	// Create pagination details
 	pagination := utils.NewPagination(pageStr, sizeStr, totalItems)
 
-	// Prepare the response
-	response := map[string]interface{}{
-		"data":       searchResult,
-		"pagination": pagination,
+	utils.WriteSuccessResponse(w, http.StatusOK, searchResult, &pagination)
+}
+
+func SuggestHandler(w http.ResponseWriter, r *http.Request) {
+	query := r.URL.Query().Get("q")
+
+	suggestions, err := services.Suggest(query)
+	if err != nil {
+		utils.WriteErrorResponse(w, http.StatusInternalServerError, "Error fetching suggestions", nil)
+		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(response)
+	utils.WriteSuccessResponse(w, http.StatusOK, suggestions, nil)
 }

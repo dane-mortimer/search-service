@@ -1,1 +1,6 @@
-.env
+**/*/lambda_function.zip
+output.txt
+
+# Python virtual env
+lambda/env
+lambda/package
