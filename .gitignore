@@ -6,7 +6,7 @@ ingestion-service/package
 # Python virtual env
 ingestion-service/env 
 
-
+commit.txt
 
 # Docker created directories
 volume/

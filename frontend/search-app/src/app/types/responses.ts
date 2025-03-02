@@ -1,5 +1,3 @@
-import { CreateCourseRequest } from "./requests";
-
 export interface PaginationResponse {
   page: number;
   size: number;

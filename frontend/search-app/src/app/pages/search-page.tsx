@@ -10,7 +10,6 @@ import {
   SearchCourseResponse,
 } from '../types/responses';
 import CreateCourseButton from '../components/create-button';
-import useEnhancedEffect from '@mui/material/utils/useEnhancedEffect';
 
 const SearchPage: React.FC = () => {
   const defaultPagination = {
@@ -78,10 +77,6 @@ const SearchPage: React.FC = () => {
       console.error('Error creating course:', error);
     }
   };
-
-  // useEnhancedEffect(() => {
-  //   handleSearch("", 1) 
-  // });
 
   return (
     <Container>

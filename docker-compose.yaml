@@ -16,15 +16,15 @@ services:
     build: ./search-service
     container_name: search-service
     environment:
-      - OPENSEARCH_ENDPOINT=http://opensearch:9200
+      - OPENSEARCH_ENDPOINT=$OPENSEARCH_ENDPOINT
       - DYNAMODB_ENDPOINT=http://localstack:4566
       - PORT=8080
-      - ENV=local
-      - INDEX_NAME=courses
+      - ENV=$ENV
+      - COURSE_INDEX=$COURSE_INDEX
+      - COURSE_TABLE=$COURSE_TABLE
       - AWS_ACCESS_KEY_ID=test
       - AWS_SECRET_ACCESS_KEY=test
       - AWS_DEFAULT_REGION=us-east-1
-      - COURSE_TABLE=course-table
     ports:
       - "8080:8080"
     depends_on:

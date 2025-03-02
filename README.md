@@ -12,21 +12,7 @@ The compute will be deployed on ECS with the react application deployed on S3.
 
 # Project Structure
 
-
 ```
-├── README.md
-├── assets
-├── docker-compose.yaml
-├── frontend
-├── grafana
-├── ingestion-service
-├── prometheus
-├── scripts
-├── search-service
-└── volume
-
-9 directories, 2 files
-~/code/search-service (main) $ tree -L 2
 .
 ├── assets                                    # Architecture Diagrams
 │   ├── SearchServiceArchitecture.drawio
@@ -41,17 +27,17 @@ The compute will be deployed on ECS with the react application deployed on S3.
 ├── prometheus                                # Prometheus Configuration
 ├── scripts                                   # Local development setup scripts             
 └── search-service
-    ├── Dockerfile                    
-    ├── clients
-    ├── controllers
-    ├── dao
-    ├── go.mod
+    ├── Dockerfile                            
+    ├── clients                               # External Clients, Opensearch DynamoDB
+    ├── controllers                           # Application controllers
+    ├── dao                                   # Database access layer
+    ├── go.mod                                # Dependency management
     ├── go.sum
-    ├── handlers
-    ├── main.go
-    ├── middleware
-    ├── models
-    └── utils
+    ├── handlers                              # Route handlers
+    ├── main.go                               # Application entry point
+    ├── middleware                            # Middleware - cors, security, loggers etc 
+    ├── models                                # Models
+    └── utils                                 # Utility functions
 ```
 
 # Usage 
@@ -59,32 +45,39 @@ The compute will be deployed on ECS with the react application deployed on S3.
 ## Requirements
 
 * Go installed - v1.24
-* Docker installed - v20.10.10
-* Docker compose installed - v1.29.2
+* Docker installed - >v20.10.10
+* Docker compose installed - >v2.1.2
+* Python3.11 installed
+    * pip installed
 
 ``` bash
 pip install aws-local
 ```
 
-## Build Lambda
+## Setup Environment Variables
 
 ``` bash
-cd lambda
-python3 -m venv env
-source env/bin/activate
-mkdir package
-pip install -r requirements.txt --target package 
-deactivate
+ENV=local
+PREFIX="course"
+COURSE_INDEX=${PREFIX}-index
+COURSE_TABLE=${PREFIX}-table
+OPENSEARCH_ENDPOINT=http://opensearch:9200 # Opensearch docker network endpoint
 ```
 
 ## Launch Service
 
 ``` bash
 # Launch services
-docker-compose up -d --build
+ENV=$ENV COURSE_INDEX=$COURSE_INDEX COURSE_TABLE=$COURSE_TABLE OPENSEARCH_ENDPOINT=$OPENSEARCH_ENDPOINT docker-compose up -d --build
 
-# Check AWS logs
-docker logs localstack-main -f 
+# In seperate terminals you can get the logs 
+# for the different containers
+
+# AWS Local Stack Logs 
+docker logs localstack -f 
+
+# Search service logs 
+docker logs search-service -f
 ```
 
 ## Create Opensearch Index and AWS resources
@@ -92,39 +85,43 @@ docker logs localstack-main -f
 Once docker-compose has built and deployed, run the following scripts. 
 
 ``` bash
-INDEX_NAME=courses
-
 # Create OpenSearch Index
-./scripts/create-os-index.sh ${INDEX_NAME}
+./scripts/create-course-index.sh ${COURSE_INDEX}
 
 # Build AWS Resources
-./scripts/localstack-setup.sh ${INDEX_NAME}
+./scripts/provision-stack.sh ${COURSE_INDEX} ${COURSE_TABLE} ${OPENSEARCH_ENDPOINT}
 ``` 
+
+## Load mock data
+
+Now that the index is created an local stack is provisioned, lets load some data. 
+
+This script creates a new item every 2 seconds to prevent overloading system resources and allowing the lambda to index documents in OpenSearch.
+
+We can execute in a new terminal and leave it running in the background. 
+
+``` bash
+./scripts/create-mock-data.sh
+```
 
 ## Build Grafana Dashboard
 
 Metrics included 
 
-```
-P99 Latency
-Total Requests
-Requests per interval
-Error rate
-```
+> P99 Latency \
+> Total Requests \
+> Requests per interval \
+> Error rate
 
 1. Navigate to `http:localhost:3000`
-2. Login using username: `admin`, password: `admin` 
-3. Add Prometheus as a data source: `http:localhost:9090`
-4. Import dashboard from JSON
-5. Copy contents of grafana.json
+2. Login using username: `admin`, password: `admin`, then change the admin password.
+3. The dashboard is automatically loaded into Grafana and Prometheus is connected as a datasource
 
 ## Hit the service
 
-Navigate to `localhost:3001` and use the service
+Navigate to `localhost:3001` and use the web app. 
 
-Or 
-
-This script will run and hit the service 2000 times, you can see the metrics being imported into grafana.
+Alternatively, this script will run and hit the service 2000 times, you can see the metrics being imported into grafana.
 
 ``` bash
 ./scripts/test-service.sh

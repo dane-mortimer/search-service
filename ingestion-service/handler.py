@@ -8,6 +8,10 @@ import boto3
 OPENSEARCH_ENDPOINT = os.getenv("OPENSEARCH_ENDPOINT")
 OPENSEARCH_INDEX = os.getenv("OPENSEARCH_INDEX")
 
+OPENSEARCH_DOMAIN = OPENSEARCH_ENDPOINT.replace('http://', '').replace('https://', '').split(":")
+OPENSEARCH_HOST   = OPENSEARCH_DOMAIN[0]
+OPENSEARCH_PORT   = OPENSEARCH_DOMAIN[1]
+
 # Initialize OpenSearch client
 def get_opensearch_client():
     if os.getenv("AWS_REGION"):  # If running in AWS, use AWS SigV4 authentication
@@ -20,7 +24,7 @@ def get_opensearch_client():
             session_token=credentials.token
         )
         return OpenSearch(
-            hosts=[{'host': OPENSEARCH_ENDPOINT.replace('http://', '').replace('https://', ''), 'port': 9200}],
+            hosts=[{'host': OPENSEARCH_HOST, 'port': OPENSEARCH_PORT}],
             http_auth=aws_auth,
             use_ssl=True if OPENSEARCH_ENDPOINT.startswith('https://') else False,
             verify_certs=True,
@@ -28,8 +32,8 @@ def get_opensearch_client():
         )
     else:  # For local development or non-AWS environments
         return OpenSearch(
-            hosts=[{'host': OPENSEARCH_ENDPOINT.replace('http://', '').replace('https://', ''), 'port': 9200}],
-            http_auth=('username', 'password'),  # Replace with your OpenSearch credentials
+            hosts=[{'host': OPENSEARCH_HOST, 'port': OPENSEARCH_PORT}],
+            http_auth=('username', 'password'),  
             use_ssl=True if OPENSEARCH_ENDPOINT.startswith('https://') else False,
             verify_certs=True,
             connection_class=RequestsHttpConnection

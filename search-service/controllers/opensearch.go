@@ -18,7 +18,7 @@ import (
 
 func SearchCourseController(query, pageStr, sizeStr string, fields []string) ([]models.BaseCourse, int, error) {
 
-	index := os.Getenv("INDEX_NAME")
+	index := os.Getenv("COURSE_INDEX")
 
 	page, _ := strconv.Atoi(pageStr)
 	size, _ := strconv.Atoi(sizeStr)
@@ -83,7 +83,7 @@ func SearchCourseController(query, pageStr, sizeStr string, fields []string) ([]
 
 func SuggestCourseController(query string) ([]string, error) {
 
-	index := os.Getenv("INDEX_NAME")
+	index := os.Getenv("COURSE_INDEX")
 	// Define the search request
 	req := opensearchapi.SearchRequest{
 		Index: []string{index},

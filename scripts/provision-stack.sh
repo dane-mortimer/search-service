@@ -1,16 +1,18 @@
 #!/usr/bin/env bash
 
-if [ $# != 1 ]; then
-    echo -e "$0 expects 1 argument: index_name"
+set -e
+
+if [ $# != 3 ]; then
+    echo -e "$0 expects 3 arguments: index_name, table_name, opensearch_endpoint"
+    echo -e "Example: $0 course-index course-table http://localhost:9200"
     exit 1
 fi 
 
 INDEX_NAME=$1
-OPENSEARCH_ENDPOINT="opensearch"
+TABLE_NAME=$2
+OPENSEARCH_ENDPOINT=$3
 
-export PREFIX="course"
-export TABLE_NAME="${PREFIX}-table"
-export FUNCTION_NAME="${PREFIX}-to-opensearch-function"
+export FUNCTION_NAME="${TABLE_NAME}-to-${INDEX_NAME}"
 
 export LAMBDA_BASE_DIR="ingestion-service"
 
@@ -60,20 +62,20 @@ awslocal lambda create-event-source-mapping \
 echo -e "\nWaiting for lambda function to become active" 
 awslocal lambda wait function-active-v2 --function-name ${FUNCTION_NAME}
 
-echo -e "\nAdding Test Item to DynamoDB" 
-awslocal dynamodb put-item \
-    --table-name ${TABLE_NAME} \
-    --item '{"id": {"S": "1"}, "title": {"S": "Test Item1"}, "content": { "S": "Test Content1" }, "owner": {"S": "Test Owner" } }'
+echo -e "\nAll Resources provisioned" 
 
-sleep 5
-
-echo -e "\nChecking OpenSearch Index is updated" 
-curl -X GET "http://localhost:9200/${INDEX_NAME}/_search?pretty" -H 'Content-Type: application/json'
-
+# Examples
+# echo -e "\nAdding Test Item to DynamoDB" 
+# awslocal dynamodb put-item \
+#     --table-name ${TABLE_NAME} \
+#     --item '{"id": {"S": "1"}, "title": {"S": "Test Item1"}, "content": { "S": "Test Content1" }, "owner": {"S": "Test Owner" } }'
+#
+# echo -e "\nChecking OpenSearch Index is updated" 
+# curl -X GET "http://localhost:9200/${INDEX_NAME}/_search?pretty" -H 'Content-Type: application/json'
+#
 # PAYLOAD=$(echo -e '{"Records": [{"eventID": "1", "eventName": "INSERT", "dynamodb": {"NewImage": {"id": {"S": "1"}, "title": {"S": "Test Item1"}, "content": { "S": "Test Content" }, "owner": {"S": "Test Owner" } }}}]}' | base64)
-
+#
 # awslocal lambda invoke \
 #     --function-name ${FUNCTION_NAME} \
 #     --payload  ${PAYLOAD} \
 #     output.txt
-
