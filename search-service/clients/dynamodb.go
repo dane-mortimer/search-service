@@ -9,9 +9,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 )
 
-var (
-	DynamoDBClient *dynamodb.Client
-)
+var DynamoDBClient *dynamodb.Client
 
 func InitializeDynamoDBClient(region string, customEndpoint string) {
 	// Create a context
@@ -24,12 +22,14 @@ func InitializeDynamoDBClient(region string, customEndpoint string) {
 	}
 
 	if customEndpoint != "" {
+		log.Printf("Initializing DynamoDB client with Endpoint: %v", customEndpoint)
 		DynamoDBClient = dynamodb.NewFromConfig(cfg, func(o *dynamodb.Options) {
 			o.BaseEndpoint = aws.String(customEndpoint)
 		})
 		return
 	}
 
+	log.Print("Initializing DynamoDB client")
 	// Initialize the DynamoDB client
 	DynamoDBClient = dynamodb.NewFromConfig(cfg)
 }

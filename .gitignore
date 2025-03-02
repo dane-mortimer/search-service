@@ -1,6 +1,14 @@
+# Ingestion service Ignores
 **/*/lambda_function.zip
 output.txt
+ingestion-service/package
 
 # Python virtual env
-lambda/env
-lambda/package
+ingestion-service/env 
+
+
+
+# Docker created directories
+volume/
+
+**/*/env

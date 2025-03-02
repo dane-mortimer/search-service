@@ -1,4 +1,4 @@
-package services
+package controllers
 
 import (
 	"context"
@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"os"
 	"strconv"
 	"strings"
 
@@ -15,7 +16,10 @@ import (
 	"github.com/opensearch-project/opensearch-go/opensearchapi"
 )
 
-func Search(query, pageStr, sizeStr string, fields []string) ([]models.BaseCourse, int, error) {
+func SearchCourseController(query, pageStr, sizeStr string, fields []string) ([]models.BaseCourse, int, error) {
+
+	index := os.Getenv("INDEX_NAME")
+
 	page, _ := strconv.Atoi(pageStr)
 	size, _ := strconv.Atoi(sizeStr)
 
@@ -31,10 +35,12 @@ func Search(query, pageStr, sizeStr string, fields []string) ([]models.BaseCours
 	// Construct the fields array for the multi_match query
 	fieldsJSON, err := json.Marshal(fields)
 	if err != nil {
+		log.Printf("failed to marshal fields: %v", err)
 		return nil, 0, fmt.Errorf("failed to marshal fields: %w", err)
 	}
 
 	req := opensearchapi.SearchRequest{
+		Index: []string{index},
 		Body: strings.NewReader(fmt.Sprintf(`{
 			"query": {
 				"multi_match": {
@@ -51,6 +57,7 @@ func Search(query, pageStr, sizeStr string, fields []string) ([]models.BaseCours
 
 	res, err := req.Do(context.Background(), clients.Client)
 	if err != nil {
+		log.Printf("Opensearch search request failed: %v", err)
 		return nil, 0, err
 	}
 	defer res.Body.Close()
@@ -74,11 +81,12 @@ func Search(query, pageStr, sizeStr string, fields []string) ([]models.BaseCours
 	return documents, totalItems, nil
 }
 
-func Suggest(query string) ([]string, error) {
+func SuggestCourseController(query string) ([]string, error) {
 
+	index := os.Getenv("INDEX_NAME")
 	// Define the search request
 	req := opensearchapi.SearchRequest{
-		Index: []string{"my-index"}, // Replace with your index name
+		Index: []string{index},
 		Body: strings.NewReader(fmt.Sprintf(`{
 			"query": {
 				"multi_match": {
@@ -97,6 +105,7 @@ func Suggest(query string) ([]string, error) {
 	// Execute the search request
 	res, err := req.Do(context.Background(), clients.Client)
 	if err != nil {
+		log.Printf("Error executing search request: %v", err)
 		return nil, fmt.Errorf("error executing search request: %w", err)
 	}
 	defer res.Body.Close()

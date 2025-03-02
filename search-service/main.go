@@ -18,22 +18,29 @@ func main() {
 	env := os.Getenv("ENV")
 	awsRegion := os.Getenv("AWS_REGION")
 	opensearchEndpoint := os.Getenv("OPENSEARCH_ENDPOINT")
+	dynamodbEndpoint := os.Getenv("DYNAMODB_ENDPOINT")
 
-	// Initialize OpenSearch client
 	clients.NewOpenSearchClient(env, opensearchEndpoint, awsRegion)
+	clients.InitializeDynamoDBClient(awsRegion, dynamodbEndpoint)
 
-	// Create a new router
 	r := mux.NewRouter()
 
-	// Apply middleware
 	r.Use(middleware.CORSMiddleware)
-	r.Use(middleware.CSRFMiddleware)
-	r.Use(middleware.XSSMiddleware)
+	if env != "local" {
+		r.Use(middleware.CSRFMiddleware)
+		r.Use(middleware.XSSMiddleware)
+	}
 	r.Use(middleware.LoggingMiddleware)
 
-	// Define routes
-	r.HandleFunc("/search", handlers.SearchHandler).Methods("GET")
-	r.HandleFunc("/suggest", handlers.SuggestHandler).Methods("GET")
+	api := r.PathPrefix("/api/v1").Subrouter()
+
+	courses := api.PathPrefix("/course").Subrouter()
+
+	courses.HandleFunc("/search", handlers.SearchCourseHandler).Methods("GET")
+	courses.HandleFunc("/suggest", handlers.SuggestCourseHandler).Methods("GET")
+	courses.HandleFunc("/{id}", handlers.GetCourseHandler).Methods("GET")
+	courses.HandleFunc("/", handlers.CreateCourseHandler).Methods("POST")
+
 	r.Handle("/metrics", promhttp.Handler())
 
 	// Apply the NotFoundMiddleware

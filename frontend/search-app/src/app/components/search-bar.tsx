@@ -3,7 +3,8 @@
 import { useState } from 'react';
 import { Autocomplete, TextField, InputAdornment } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import { SearchBarProps } from '../types/types';
+import { SearchBarProps } from '../types/props';
+import { COURSE_SERVICE } from '../constants/constants';
 
 const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
   const [query, setQuery] = useState<string>('');
@@ -12,9 +13,10 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
   const fetchSuggestions = async (value: string) => {
     if (value) {
       try {
-        const response = await fetch(`http://localhost:8080/suggest?q=${value}`);
+        const response = await fetch(`${COURSE_SERVICE}/suggest?q=${value}`);
         const data = await response.json();
-        setSuggestions(data); // Assuming the API returns an array of strings
+        if (data.data)
+          setSuggestions(data.data);
       } catch (error) {
         console.error('Error fetching suggestions:', error);
       }
@@ -28,14 +30,14 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
     await fetchSuggestions(value);
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement | HTMLDivElement>) => {
     if (e.key === 'Enter') {
       onSearch(query, 1);
+      setSuggestions([]);
     }
   };
 
   return (
-    <div style={{ width: '100%', maxWidth: '600px', margin: '20px auto' }}>
       <Autocomplete
         freeSolo
         options={suggestions}
@@ -47,7 +49,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
             fullWidth
             variant="outlined"
             placeholder="Search..."
-            onKeyPress={handleKeyPress}
+            onKeyDown={handleKeyPress}
             InputProps={{
               ...params.InputProps,
               startAdornment: (
@@ -61,12 +63,12 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
         onChange={(event, value) => {
           if (value) {
             onSearch(value, 1);
+            setSuggestions([]);
           }
         }}
         filterOptions={(options) => options} 
         open={suggestions.length > 0} 
       />
-    </div>
   );
 };
 

@@ -14,19 +14,44 @@ The compute will be deployed on ECS with the react application deployed on S3.
 
 
 ```
-├── clients               # External API clients (e.g. Opensearch)
-├── docker-compose.yml    # Docker Compose, deploy the app locally
-├── go.mod                # Depedency Management
-├── grafana.json          # Grafana configuration
-├── handlers              # API handlers
-├── main.go               # entry point for search service
-├── middleware            # Middleware - security, logging, cors etc
-├── models                # Application comdels
-├── prometheus.yml        # Prometheus configuration
-├── react-search-app      # Basic react app to use application
-├── scripts               # Upload services
-├── services              # API Services
-└── utils                 # Utility Files
+├── README.md
+├── assets
+├── docker-compose.yaml
+├── frontend
+├── grafana
+├── ingestion-service
+├── prometheus
+├── scripts
+├── search-service
+└── volume
+
+9 directories, 2 files
+~/code/search-service (main) $ tree -L 2
+.
+├── assets                                    # Architecture Diagrams
+│   ├── SearchServiceArchitecture.drawio
+│   └── SearchServiceArchitecture.png         
+├── docker-compose.yaml                       # Local development docker compose
+├── frontend
+│   └── search-app                            # NextJS frontned app
+├── grafana                                   # Grafana Configuration
+├── ingestion-service                   
+│   ├── handler.py                            # Ingestion service lambda
+│   └── requirements.txt                      # Ingestion service dependencies
+├── prometheus                                # Prometheus Configuration
+├── scripts                                   # Local development setup scripts             
+└── search-service
+    ├── Dockerfile                    
+    ├── clients
+    ├── controllers
+    ├── dao
+    ├── go.mod
+    ├── go.sum
+    ├── handlers
+    ├── main.go
+    ├── middleware
+    ├── models
+    └── utils
 ```
 
 # Usage 
@@ -49,22 +74,31 @@ python3 -m venv env
 source env/bin/activate
 mkdir package
 pip install -r requirements.txt --target package 
+deactivate
 ```
 
 ## Launch Service
 
 ``` bash
+# Launch services
 docker-compose up -d --build
-``` 
 
-## Load mock data into service
+# Check AWS logs
+docker logs localstack-main -f 
+```
 
-Once docker-compose has built and deployed, run this. 
+## Create Opensearch Index and AWS resources
 
-This script creates the search index and uploads about 10,000 lines of mock data. 
+Once docker-compose has built and deployed, run the following scripts. 
 
 ``` bash
-./scripts/upload-opensearch-local.sh
+INDEX_NAME=courses
+
+# Create OpenSearch Index
+./scripts/create-os-index.sh ${INDEX_NAME}
+
+# Build AWS Resources
+./scripts/localstack-setup.sh ${INDEX_NAME}
 ``` 
 
 ## Build Grafana Dashboard

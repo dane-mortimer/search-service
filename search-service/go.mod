@@ -11,15 +11,12 @@ require (
 	github.com/prometheus/client_golang v1.21.0
 )
 
-require (
-	github.com/aws/aws-sdk-go v1.55.5
-	github.com/opensearch-project/opensearch-go v1.1.0
-)
+require github.com/opensearch-project/opensearch-go v1.1.0
 
 require (
 	github.com/aws/aws-sdk-go-v2/service/dynamodbstreams v1.25.0 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/endpoint-discovery v1.10.15 // indirect
-	github.com/jmespath/go-jmespath v0.4.0 // indirect
+	github.com/oklog/ulid v1.3.1 // indirect
 )
 
 require (

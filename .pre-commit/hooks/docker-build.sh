@@ -4,7 +4,7 @@
 echo "Starting Docker build..."
 
 # Build the Docker image
-docker build --no-cache -t search-service .
+docker build --no-cache -t search-service ./search-service
 
 # Check if the build was successful
 if [ $? -eq 0 ]; then

@@ -12,8 +12,20 @@ export PREFIX="course"
 export TABLE_NAME="${PREFIX}-table"
 export FUNCTION_NAME="${PREFIX}-to-opensearch-function"
 
-(cd lambda/package && zip -r ../lambda_function.zip . >/dev/null)
-(cd lambda && zip lambda_function.zip handler.py >/dev/null)
+export LAMBDA_BASE_DIR="ingestion-service"
+
+
+# Build lambda package
+(
+    cd ${LAMBDA_BASE_DIR} \
+    && python3 -m venv env \
+    && source env/bin/activate \
+    && mkdir package \
+    && pip install -r requirements.txt --target package  \
+    && deactivate
+)
+(cd ${LAMBDA_BASE_DIR}/package && zip -r ../lambda_function.zip . >/dev/null)
+(cd ${LAMBDA_BASE_DIR} && zip lambda_function.zip handler.py >/dev/null)
 
 echo -e "\nCreating DynamoDB Table" 
 TABLE_STREAM=$(
@@ -34,7 +46,7 @@ awslocal lambda create-function \
     --handler handler.handler \
     --environment "Variables={OPENSEARCH_INDEX=${INDEX_NAME},OPENSEARCH_ENDPOINT=${OPENSEARCH_ENDPOINT}}" \
     --role arn:aws:iam::000000000000:role/MyLambdaRole \
-    --zip-file fileb://lambda/lambda_function.zip \
+    --zip-file fileb://${LAMBDA_BASE_DIR}/lambda_function.zip \
     --output text >/dev/null
 
 echo -e "\nCreating Lambda / DynamoDB Stream Integration" 
@@ -51,7 +63,7 @@ awslocal lambda wait function-active-v2 --function-name ${FUNCTION_NAME}
 echo -e "\nAdding Test Item to DynamoDB" 
 awslocal dynamodb put-item \
     --table-name ${TABLE_NAME} \
-    --item '{"id": {"S": "1"}, "title": {"S": "Test Item1"}, "content": { "S": "Test Content" }, "owner": {"S": "Test Owner" } }'
+    --item '{"id": {"S": "1"}, "title": {"S": "Test Item1"}, "content": { "S": "Test Content1" }, "owner": {"S": "Test Owner" } }'
 
 sleep 5
 
