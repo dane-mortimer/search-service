@@ -8,6 +8,8 @@ import (
 	"search-service/clients"
 	"search-service/handlers"
 	"search-service/middleware"
+	"search-service/models"
+	"search-service/utils"
 
 	"github.com/gorilla/mux"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -27,7 +29,28 @@ func main() {
 
 	r.Use(middleware.CORSMiddleware)
 
+	r.HandleFunc("/ping", func(w http.ResponseWriter, r *http.Request) {
+		utils.WriteSuccessResponse(w, http.StatusOK, nil, nil)
+	})
+
 	if env != "local" {
+		adminPaths := []models.AdminPath{
+			utils.CreateAdminPath("/api/v1/course", "POST"),
+			utils.CreateAdminPath("/api/v1/course", "OPTIONS"),
+		}
+
+		cognitoMiddleware, err := clients.InitializeCognitoClient(
+			"userPoolID",
+			awsRegion,
+			adminPaths,
+		)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		r.Use(cognitoMiddleware.Authenticate)
+
 		r.Use(middleware.CSRFMiddleware)
 		r.Use(middleware.XSSMiddleware)
 	}

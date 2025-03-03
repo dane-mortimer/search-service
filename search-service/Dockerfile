@@ -27,6 +27,9 @@ FROM alpine:latest
 # Install dependency to run go binary
 RUN apk add --no-cache libc6-compat
 
+# For health check
+RUN apk add --no-cache curl
+
 # Set the working directory inside the container
 WORKDIR /root
 
