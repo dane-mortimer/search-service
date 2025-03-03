@@ -26,6 +26,7 @@ func main() {
 	r := mux.NewRouter()
 
 	r.Use(middleware.CORSMiddleware)
+
 	if env != "local" {
 		r.Use(middleware.CSRFMiddleware)
 		r.Use(middleware.XSSMiddleware)
@@ -39,7 +40,7 @@ func main() {
 	courses.HandleFunc("/search", handlers.SearchCourseHandler).Methods("GET")
 	courses.HandleFunc("/suggest", handlers.SuggestCourseHandler).Methods("GET")
 	courses.HandleFunc("/{id}", handlers.GetCourseHandler).Methods("GET")
-	courses.HandleFunc("/", handlers.CreateCourseHandler).Methods("POST")
+	courses.HandleFunc("", handlers.CreateCourseHandler).Methods("POST", "OPTIONS")
 
 	r.Handle("/metrics", promhttp.Handler())
 

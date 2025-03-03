@@ -2,12 +2,14 @@ package handlers
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 
 	"search-service/controllers"
 	"search-service/models"
 	"search-service/utils"
 
+	"github.com/go-playground/validator"
 	"github.com/gorilla/mux"
 )
 
@@ -17,7 +19,20 @@ func CreateCourseHandler(w http.ResponseWriter, r *http.Request) {
 	// Decode the request body into the course struct
 	err := json.NewDecoder(r.Body).Decode(&course)
 	if err != nil {
-		http.Error(w, "Invalid request payload", http.StatusBadRequest)
+		log.Printf("Failed to decode course: %v", r.Body)
+		utils.WriteErrorResponse(w, http.StatusBadRequest, "Validation failed", nil)
+		return
+	}
+
+	err = utils.Validate.Struct(course)
+	if err != nil {
+		validationErrors := err.(validator.ValidationErrors)
+		errorDetails := make(map[string]string)
+		for _, e := range validationErrors {
+			errorDetails[e.Field()] = e.Tag()
+		}
+		log.Printf("Request validation failed for course: %v, here's why: %v", course, errorDetails)
+		utils.WriteErrorResponse(w, http.StatusBadRequest, "Validation failed", errorDetails)
 		return
 	}
 

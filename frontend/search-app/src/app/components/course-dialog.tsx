@@ -47,7 +47,7 @@ const CourseDialog: React.FC<CourseDialogProps> = ({
               lineBreak: 'loose'
             }}
           >
-            {selectedCourse.Title}
+            {selectedCourse.title}
           </DialogTitle>
           <DialogContent
             sx={{
@@ -58,15 +58,15 @@ const CourseDialog: React.FC<CourseDialogProps> = ({
             }}
           >
             <DialogContentText style={{ textAlign: 'center' }}>
-              {selectedCourse.Content}
+              {selectedCourse.content}
             </DialogContentText>
             <br/><br/>
             <DialogContentText>
-              <strong>Owner:</strong> {selectedCourse.Owner}
+              <strong>Owner:</strong> {selectedCourse.owner}
             </DialogContentText>
             <DialogContentText>
               <strong>Created Date:</strong>{' '}
-              {new Date(selectedCourse.CreatedAt).toLocaleTimeString()} {new Date(selectedCourse.CreatedAt).toLocaleDateString()}
+              {new Date(selectedCourse.created_at).toLocaleTimeString()} {new Date(selectedCourse.created_at).toLocaleDateString()}
             </DialogContentText>
           </DialogContent>
         </>

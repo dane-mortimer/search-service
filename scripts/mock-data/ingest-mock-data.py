@@ -6,8 +6,7 @@ import time
 
 headers = {
     "Content-Type": "application/json",
-    "Accept": "application/json",
-    "X-CSRF-Token": "MTc0MDkwNjYyM3xJbWgyWm5OVVUza3JOblZhWm5SS2NWQjFPSGsyYTBkcFpVWnBXWGxGVjFJeWRUZFJWVGxKUlVSM1ptYzlJZ289fJE1ELnVNfOqN4a3WhbeFVp0c1RKsJ6p5A9E5oo6HI1X",  # Add the CSRF token to the headers
+    "Accept": "application/json"
 }
 
 # URL to which the data will be posted

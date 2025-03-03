@@ -22,7 +22,7 @@ export LAMBDA_BASE_DIR="ingestion-service"
     cd ${LAMBDA_BASE_DIR} \
     && python3 -m venv env \
     && source env/bin/activate \
-    && mkdir package \
+    && mkdir -p package \
     && pip install -r requirements.txt --target package  \
     && deactivate
 )

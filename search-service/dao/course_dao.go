@@ -61,13 +61,14 @@ func (courseTable CourseTable) GetCourse(ctx context.Context, id string) (models
 
 	if err != nil {
 		log.Printf("Couldn't get course with ID %v. Here's why: %v\n", id, err)
-	} else {
-
-		err = attributevalue.UnmarshalMap(response.Item, &course)
-
-		if err != nil {
-			log.Printf("Couldn't unmarshal response. Here's why: %v\n", err)
-		}
+		return models.Course{}, err
 	}
-	return course, err
+
+	err = attributevalue.UnmarshalMap(response.Item, &course)
+	if err != nil {
+		log.Printf("Couldn't unmarshal response. Here's why: %v\n", err)
+		return models.Course{}, err
+	}
+
+	return course, nil
 }

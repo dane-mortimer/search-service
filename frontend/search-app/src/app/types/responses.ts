@@ -18,10 +18,10 @@ export interface SearchCourseResponse {
 }
 
 export interface CourseResponse {
-  ID: string;
-  CreatedAt: string;
-  Owner: string;
-  Title: string;
-  Content: string;
+  id: string;
+  created_at: string;
+  owner: string;
+  title: string;
+  content: string;
 }
 

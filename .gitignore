@@ -8,6 +8,9 @@ ingestion-service/env
 
 commit.txt
 
+__pycache__
+.pytest_cache
+
 # Docker created directories
 volume/
 

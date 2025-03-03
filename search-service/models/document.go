@@ -8,9 +8,9 @@ type BaseCourse struct {
 }
 
 type Course struct {
-	ID        string `dynamodbav:"id"`
-	Title     string `dynamodbav:"title"`
-	Content   string `dynamodbav:"content"`
-	CreatedAt string `dynamodbav:"created_at"` // Creation date of the item
-	Owner     string `dynamodbav:"owner"`      // Owner / Creator of the course
+	ID        string `dynamodbav:"id" json:"id" validate:"omitempty"`
+	Title     string `dynamodbav:"title" json:"title" validate:"required,min=3,max=100"`
+	Content   string `dynamodbav:"content" json:"content" validate:"required,min=10"`
+	CreatedAt string `dynamodbav:"created_at" json:"created_at" validate:"omitempty"`
+	Owner     string `dynamodbav:"owner" json:"owner" validate:"required,min=3,max=50"`
 }

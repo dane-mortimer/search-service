@@ -32,8 +32,8 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement | HTMLDivElement>) => {
     if (e.key === 'Enter') {
-      onSearch(query, 1);
       setSuggestions([]);
+      onSearch(query, 1);
     }
   };
 
@@ -62,8 +62,8 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
         )}
         onChange={(event, value) => {
           if (value) {
-            onSearch(value, 1);
             setSuggestions([]);
+            onSearch(value, 1);
           }
         }}
         filterOptions={(options) => options} 
