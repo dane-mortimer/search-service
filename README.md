@@ -14,30 +14,17 @@ The compute will be deployed on ECS with the react application deployed on S3.
 
 ```
 .
-├── assets                                    # Architecture Diagrams
-│   ├── SearchServiceArchitecture.drawio
-│   └── SearchServiceArchitecture.png         
-├── docker-compose.yaml                       # Local development docker compose
-├── frontend
-│   └── search-app                            # NextJS frontned app
-├── grafana                                   # Grafana Configuration
-├── ingestion-service                   
-│   ├── handler.py                            # Ingestion service lambda
-│   └── requirements.txt                      # Ingestion service dependencies
-├── prometheus                                # Prometheus Configuration
-├── scripts                                   # Local development setup scripts             
-└── search-service
-    ├── Dockerfile                            
-    ├── clients                               # External Clients, Opensearch DynamoDB
-    ├── controllers                           # Application controllers
-    ├── dao                                   # Database access layer
-    ├── go.mod                                # Dependency management
-    ├── go.sum
-    ├── handlers                              # Route handlers
-    ├── main.go                               # Application entry point
-    ├── middleware                            # Middleware - cors, security, loggers etc 
-    ├── models                                # Models
-    └── utils                                 # Utility functions
+├── README.md               
+├── assets                  # Architecture diagrams 
+├── docker-compose.yaml     # Docker-compose
+├── frontend                # NextJS frontend app 
+├── grafana                 # Grafana dashboards configuration
+├── ingestion-service       # DynamoDB to Opensearch ingestion service
+├── integration-tests       # Integration tests
+├── Dockerfile.localstack   # Dockerfile to setup local stack resources
+├── prometheus              # Prometheus configuration
+├── scripts                 # Helper scripts
+└── search-service          # Backend Search service
 ```
 
 # Usage 
@@ -51,24 +38,24 @@ The compute will be deployed on ECS with the react application deployed on S3.
     * pip installed
 
 ``` bash
+# Helper for debugging AWS local 
 pip install aws-local
-```
 
-## Setup Environment Variables
-
-``` bash
-ENV=local
-PREFIX="course"
-COURSE_INDEX=${PREFIX}-index
-COURSE_TABLE=${PREFIX}-table
-OPENSEARCH_ENDPOINT=http://opensearch:9200 # Opensearch docker network endpoint
+# e.g.
+# awslocal dynamodb list-tables
 ```
 
 ## Launch Service
 
 ``` bash
+PREFIX="course"
+
 # Launch services
-ENV=$ENV COURSE_INDEX=$COURSE_INDEX COURSE_TABLE=$COURSE_TABLE OPENSEARCH_ENDPOINT=$OPENSEARCH_ENDPOINT docker-compose up -d --build
+ENV=local \
+COURSE_INDEX=${PREFIX}-index \
+COURSE_TABLE=${PREFIX}-table \
+OPENSEARCH_ENDPOINT=http://opensearch:9200 \
+docker-compose up -d --build
 
 # In seperate terminals you can get the logs 
 # for the different containers
@@ -79,18 +66,6 @@ docker logs localstack -f
 # Search service logs 
 docker logs search-service -f
 ```
-
-## Create Opensearch Index and AWS resources
-
-Once docker-compose has built and deployed, run the following scripts. 
-
-``` bash
-# Create OpenSearch Index
-./scripts/create-course-index.sh ${COURSE_INDEX}
-
-# Build AWS Resources
-./scripts/provision-stack.sh ${COURSE_INDEX} ${COURSE_TABLE} ${OPENSEARCH_ENDPOINT}
-``` 
 
 ## Load mock data
 
@@ -104,7 +79,7 @@ We can execute in a new terminal and leave it running in the background.
 ./scripts/create-mock-data.sh
 ```
 
-## Build Grafana Dashboard
+## View metrics
 
 Metrics included 
 

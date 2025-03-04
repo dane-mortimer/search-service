@@ -107,7 +107,7 @@ services:
   localstack-setup:
     container_name: localstack-setup
     build:
-      context: ./local-stack
+      dockerfile: Dockerfile.localstack
     environment:
       - DEBUG=${DEBUG:-0}
       - OPENSEARCH_ENDPOINT=$OPENSEARCH_ENDPOINT
@@ -138,6 +138,12 @@ services:
     environment:
       - SEARCH_SERVICE_DOMAIN=http://search-service:8080
     entrypoint: ["./tests/run-tests.sh"]
+    healthcheck:
+      test: ["CMD", "sh", "-c", "cat /tmp/healthstatus | grep healthy"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
 
 networks:

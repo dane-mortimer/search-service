@@ -1,16 +1,15 @@
 #!/usr/bin/env bash
 
-# Run the tests
-pytest tests/main.py
+# Run pytest and save the exit code
+pytest tests/main.py 
+TEST_RESULT=$?
 
-# Capture the exit code of the pytest command
-TEST_EXIT_CODE=$?
-
-# If the tests failed, stop all Docker Compose services
-if [ $TEST_EXIT_CODE -ne 0 ]; then
-  echo "Tests failed with exit code $TEST_EXIT_CODE"
-  exit $TEST_EXIT_CODE
+# Write the result to a file
+if [ $TEST_RESULT -eq 0 ]; then
+  echo "healthy" > /tmp/healthstatus
+else
+  echo "unhealthy" > /tmp/healthstatus
 fi
 
-# If the tests passed, exit successfully
-exit 0
+# Exit with the pytest exit code
+exit $TEST_RESULT

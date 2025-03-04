@@ -10,7 +10,7 @@ headers = {
 }
 
 # URL to which the data will be posted
-url = "http://localhost:8080/api/v1/course/"  # Replace with your actual URL
+url = "http://localhost:8080/api/v1/course"  # Replace with your actual URL
 
 # Load JSON data from a file
 with open("data.json", "r") as file:
